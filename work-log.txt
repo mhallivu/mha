@@ -1,0 +1,6 @@
+20-10-1: tried working with container and vscode to develop sah scripts. Developped
+    first draft of mock daemon. Horrible difficulties finding out what dater actually supports
+    on container used. 1 h.
+20-10-02: Switched to other container and installed git there and copied the draft daemon. Made 
+    draft version of watcher scropt. 2 h
+20-10-03:
