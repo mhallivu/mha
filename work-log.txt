@@ -3,4 +3,5 @@
     on container used. 1 h.
 20-10-02: Switched to other container and installed git there and copied the draft daemon. Made 
     draft version of watcher scropt. 2 h
-20-10-03:
+20-10-03: Added code for watcher functionality. Made test plan. Testing manually scripts. Noticed very
+    aanoing bug -- missing #!/bin/sh -- Finished script does not work with das shell! 3h
