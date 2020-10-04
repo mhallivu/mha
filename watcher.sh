@@ -4,14 +4,7 @@
 #Verify if we have the daemon already running. Must not have several copies!
 DLOGFILE="/tmp/daemon.log"
 DLOGFILEO="/tmp/daemon.log.old"
-
-#If mock daemon is not yet running pgrep will fail and pid is marked 0
-pid=`pgrep mockd.sh`
-printf "pid: '%u" $pid
-if test $? -ne 0; then
-    pid=0
-fi    
-
+DEBUG=false
 cnt=0
 while true
 do
@@ -20,24 +13,37 @@ do
 
 #Verify that daemon is still working by checking that it accepts signals. If there is not yet
 #daemon running we dont do the checking. 
-    if test $pid -eq 0; then
-        err=2
+#dash pgrep pid comparison fails if there is not running precess, assigning
+#explicitly value 0
+    if pgrep -x mockd.sh ; then
+        # there is running process, get the pid   
+        pid=`pgrep -x mockd.sh`
+        if $DEBUG ; then
+            printf "22: pid '%u'\n" $pid
+        fi
+        if ! kill -18 $pid ; then
+            pid=0
+            if $DEBUG ; then
+                printf "27: terminated pid\n"
+            fi
+        fi
     else
-        `kill -s 0 $pid`
-        err=$?
+        pid=0
     fi
 
-    if test $err -ne 0; then
-        nohup ./mockd.sh 0<&- &>/dev/null &
+    if $DEBUG ; then
+        printf "35:err: '%u pid '%u'\n" $? $pid
+    fi
+    if [ $pid -eq 0 ]; then
+        err=nohup ./mockd.sh 0<&- &>/dev/null &
         pid=$!
-        err=$?
         date +'%Y-%m-%d %T Daemon restarted\n' >> /tmp/watchdog.log
     fi
    
     sleep 10
     cnt=$(($cnt +1))
     #Five minutes is 30 * 10 seconds
-    if test $cnt -eq 1; then #30; then
+    if test $cnt -eq 30; then
         cnt=0
         #https://unix.stackexchange.com/questions/16640/how-can-i-get-the-size-of-a-file-in-a-bash-script
         #if File does not exist use size 0

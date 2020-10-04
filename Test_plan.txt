@@ -1,0 +1,16 @@
+Test cases
+1) First time start:
+    -start without any hanging processes, no logs
+    -verify that logs appear and both processes exists
+    -kill mock process, verify that is restarted
+    -add 1000 characters to log, verify that log is swithed within 3 minutes
+    -verify that only one backup log exists by doing extra 1000 charcter addition after
+        swithcing to new log
+
+2 Second time start
+    -existing logs and existing mock daemon
+    -verify no new daemon is started
+    -verify that restarts killed daemon
+    -verify that works correctly if backup log file exists but the actual daemon log file 
+        is missing when process starts
+    -verify that works correctly if there is actual daemon log file but not backup file.
